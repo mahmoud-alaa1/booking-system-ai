@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useTheme } from "../theme-provider";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
@@ -126,10 +127,10 @@ function CategorySectionV() {
                     <motion.div
                         key={index}
                         variants={cardVariants}
-                        className={`group relative overflow-hidden rounded-xl ${theme === 'dark'
-                            ? 'bg-gray-800/50 backdrop-blur-sm'
-                            : 'bg-white/50 backdrop-blur-sm'
-                            } shadow-lg hover:shadow-xl `}
+                        className={clsx(
+                            'group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl',
+                            theme === 'dark' ? 'bg-gray-800/50 backdrop-blur-sm' : 'bg-white/50 backdrop-blur-sm'
+                        )}
                     >
                         {/* Card Image */}
                         <div className="relative h-48 overflow-hidden">
@@ -185,7 +186,7 @@ function CategorySectionV() {
                     </motion.div>
                 ))}
             </motion.div>
-        </div>
+        </div >
     );
 }
 

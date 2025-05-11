@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
 import { useTheme } from "../theme-provider"
+import clsx from "clsx"
 
 const images = [
     {
@@ -99,10 +100,13 @@ const ImageSlider = () => {
                                         alt={image.alt}
                                         className="object-cover w-full h-full rounded-2xl shadow-2xl"
                                     />
-                                    <div className={`absolute inset-0 bg-gradient-to-t ${theme === 'dark'
-                                        ? 'from-background/90 via-background/30 to-transparent'
-                                        : 'from-background/80 via-background/20 to-transparent'
-                                        } rounded-2xl`} />
+                                    <div className={clsx(
+                                        'absolute inset-0 bg-gradient-to-t rounded-2xl',
+                                        theme === 'dark'
+                                            ? 'from-background/90 via-background/30 to-transparent'
+                                            : 'from-background/80 via-background/20 to-transparent'
+                                    )} />
+
 
                                     {/* Image Label */}
                                     <motion.div
@@ -131,12 +135,14 @@ const ImageSlider = () => {
                         <motion.button
                             key={index}
                             onClick={() => setCurrentImage(index)}
-                            className={`w-2 h-2 rounded-full transition-all duration-300 ${currentImage === index
-                                ? 'bg-primary w-6'
-                                : theme === 'dark'
-                                    ? 'bg-primary/30 hover:bg-primary/50'
-                                    : 'bg-primary/40 hover:bg-primary/60'
-                                }`}
+                            className={clsx(
+                                'w-2 h-2 rounded-full transition-all duration-300',
+                                currentImage === index
+                                    ? 'bg-primary w-6'
+                                    : theme === 'dark'
+                                        ? 'bg-primary/30 hover:bg-primary/50'
+                                        : 'bg-primary/40 hover:bg-primary/60'
+                            )}
                             whileHover={{ scale: 1.2 }}
                             whileTap={{ scale: 0.9 }}
                         />
@@ -148,10 +154,13 @@ const ImageSlider = () => {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setCurrentImage((prev) => (prev - 1 + images.length) % images.length)}
-                    className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full ${theme === 'dark'
-                        ? 'bg-background/90 text-foreground'
-                        : 'bg-background/80 text-foreground'
-                        } backdrop-blur-sm flex items-center justify-center shadow-lg border border-border/50 hover:bg-background/90 z-10`}
+                    className={clsx(
+                        'absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full ',
+                        theme === 'dark'
+                            ? 'bg-background/90 text-foreground'
+                            : 'bg-background/80 text-foreground',
+                        'backdrop-blur-sm flex items-center justify-center shadow-lg border border-border/50 hover:bg-background/90 z-10'
+                    )}
                 >
                     ←
                 </motion.button>
@@ -159,10 +168,13 @@ const ImageSlider = () => {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={handleNext}
-                    className={`absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full ${theme === 'dark'
-                        ? 'bg-background/90 text-foreground'
-                        : 'bg-background/80 text-foreground'
-                        } backdrop-blur-sm flex items-center justify-center shadow-lg border border-border/50 hover:bg-background/90 z-10`}
+                    className={clsx(
+                        'absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full',
+                        theme === 'dark'
+                            ? 'bg-background/90 text-foreground'
+                            : 'bg-background/80 text-foreground',
+                        'backdrop-blur-sm flex items-center justify-center shadow-lg border border-border/50 hover:bg-background/90 z-10'
+                    )}
                 >
                     →
                 </motion.button>

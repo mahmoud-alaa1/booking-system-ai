@@ -3,6 +3,7 @@ import { Header } from "../common/Header";
 import Footer from "../common/Footer";
 import { useTheme } from "../theme-provider";
 import { motion } from "framer-motion";
+import clsx from "clsx";
 
 // Star component from HeroSection
 const Star = ({ delay, size, x, y, theme }: { delay: number; size: number; x: number; y: number; theme: string }) => (
@@ -49,21 +50,27 @@ export default function MainLayout() {
                     ))}
                 </div>
                 {/* Main spotlight */}
-                <div className={`absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] ${theme === 'dark'
-                    ? 'from-primary/10 via-primary/5 to-transparent'
-                    : 'from-black/10 via-black/5 to-transparent'
-                    } opacity-50 blur-3xl`} />
+                <div className={clsx(
+                    'absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] opacity-50 blur-3xl',
+                    theme === 'dark'
+                        ? 'from-primary/10 via-primary/5 to-transparent'
+                        : 'from-black/10 via-black/5 to-transparent'
+                )} />
 
                 {/* Secondary ambient lights */}
-                <div className={`absolute top-0 left-1/4 w-[60vw] h-[50vh] ${theme === 'dark'
-                    ? 'bg-primary/5'
-                    : 'bg-black/5'
-                    } rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2`} />
+                <div className={clsx(
+                    'absolute top-0 left-1/4 w-[60vw] h-[50vh] rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2',
+                    theme === 'dark'
+                        ? 'bg-primary/5'
+                        : 'bg-black/5'
+                )} />
 
-                <div className={`absolute bottom-0 right-1/4 w-[50vw] h-[50vh] ${theme === 'dark'
-                    ? 'bg-primary/5'
-                    : 'bg-black/5'
-                    } rounded-full blur-3xl transform translate-x-1/2 translate-y-1/2`} />
+                <div className={clsx(
+                    'absolute bottom-0 right-1/4 w-[50vw] h-[50vh] rounded-full blur-3xl transform translate-x-1/2 translate-y-1/2',
+                    theme === 'dark'
+                        ? 'bg-primary/5'
+                        : 'bg-black/5'
+                )} />
             </div>
 
             {/* Content */}
