@@ -116,6 +116,13 @@ function CategorySectionV() {
 
     return (
         <div className="container mx-auto px-4 py-12">
+            {/* Section Title */}
+            <h2 className={clsx(
+                "text-3xl md:text-4xl font-extrabold mb-10 text-center",
+                theme === 'dark' ? 'text-white' : 'text-gray-900'
+            )}>
+                Browse Event Categories
+            </h2>
             <motion.div
                 ref={ref}
                 variants={containerVariants}

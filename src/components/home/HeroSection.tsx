@@ -32,7 +32,7 @@ const FloatingLabel = ({ text, delay, x, y }: { text: string; delay: number; x: 
 const HeroSection = () => {
 
     return (
-        <section className="relative flex items-center justify-center min-h-screen overflow-hidden ">
+        <section className="relative flex items-center justify-center min-h-[calc(100vh-100px)] overflow-hidden ">
 
 
             <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
