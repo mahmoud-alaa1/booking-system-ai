@@ -58,10 +58,10 @@ export function Header() {
                     to={to}
                     className={({ isActive }) =>
                         cn(
-                            "relative flex items-center   px-6 py-2 rounded-full font-medium transition-all duration-300",
+                            "relative flex items-center px-6 py-2 rounded-full font-medium transition-all duration-300",
                             isActive
                                 ? "bg-white/75 text-black shadow-lg font-semibold"
-                                : "text-white/80 hover:bg-white/10 hover:text-white"
+                                : "text-white/80 hover:bg-white/20 hover:text-white hover:scale-105 hover:shadow-md"
                         )
                     }
                     style={{ zIndex: 1 }}
@@ -171,78 +171,82 @@ export function Header() {
                     <ModeToggle />
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon" className="hover:bg-transparent">
                                 <Menu className="h-6 w-6" />
                             </Button>
                         </SheetTrigger>
-                        <SheetContent className="bg-black/70 dark:bg-zinc-900/90 backdrop-blur-lg p-6 rounded-2xl flex flex-col gap-6 h-full">
-                            <SheetHeader>
-                                <SheetTitle>Menu</SheetTitle>
-                            </SheetHeader>
-                            <div className="flex flex-col gap-4 mt-6 flex-1">
-                                {navItems.map(({ label, to }) => (
-                                    <NavLink
-                                        key={to}
-                                        to={to}
-                                        className={({ isActive }) =>
-                                            cn(
-                                                "relative flex items-center justify-center w-full px-6 py-3 rounded-full font-medium transition-all duration-300 text-lg",
-                                                isActive
-                                                    ? "bg-white/80 text-black shadow font-semibold"
-                                                    : "text-white/80 hover:bg-white/10 hover:text-white"
-                                            )
-                                        }
-                                        onClick={() => setIsOpen(false)}
-                                    >
-                                        {({ isActive }) => (
-                                            <>
-                                                {isActive && (
-                                                    <>
-                                                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 rounded-full pointer-events-none blur-md bg-white/60" style={{ zIndex: 2 }} />
-                                                        <span className="absolute -top-1.5 left-1/2 -translate-x-1/2  -z-50 w-[60%] h-1.5  bg-white rounded-t-md " />
-                                                    </>
-                                                )}
-                                                <span className="relative z-10">{label}</span>
-                                            </>
-                                        )}
-                                    </NavLink>
-                                ))}
-                                {isAuthenticated && data && (
-                                    <NavLink
-                                        to="/profile"
-                                        className={({ isActive }) =>
-                                            cn(
-                                                "flex items-center gap-2 py-3 px-6 rounded-full text-lg font-medium transition-colors hover:text-primary hover:bg-white/10 w-full justify-center",
-                                                isActive && "text-primary font-semibold bg-white/20"
-                                            )
-                                        }
-                                        onClick={() => setIsOpen(false)}
-                                    >
-                                        <User className="h-5 w-5" />
-                                        <span>Profile</span>
-                                    </NavLink>
-                                )}
-                                {!isAuthenticated && (
-                                    <div className="flex flex-col gap-2">
-                                        <NavLink to="/login" onClick={() => setIsOpen(false)}>
-                                            <Button variant="ghost" className="w-full py-3 px-6 rounded-full text-lg">Login</Button>
-                                        </NavLink>
-                                        <NavLink to="/sign-up" onClick={() => setIsOpen(false)}>
-                                            <Button className="w-full py-3 px-6 rounded-full text-lg">Sign Up</Button>
-                                        </NavLink>
-                                    </div>
-                                )}
+                        <SheetContent side="right" className="w-[280px] p-0 bg-background">
+                            <div className="flex flex-col h-full">
+                                <div className="p-6 border-b">
+                                    <SheetTitle className="text-xl font-semibold">Menu</SheetTitle>
+                                </div>
+
+                                <nav className="flex-1 p-4">
+                                    <ul className="space-y-2">
+                                        {navItems.map(({ label, to }) => (
+                                            <li key={to}>
+                                                <NavLink
+                                                    to={to}
+                                                    className={({ isActive }) =>
+                                                        cn(
+                                                            "flex items-center px-4 py-3 rounded-lg text-base font-medium transition-all duration-200",
+                                                            isActive
+                                                                ? "bg-primary/10 text-primary"
+                                                                : "hover:bg-muted hover:translate-x-1 hover:shadow-sm"
+                                                        )
+                                                    }
+                                                    onClick={() => setIsOpen(false)}
+                                                >
+                                                    {label}
+                                                </NavLink>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </nav>
+
+                                <div className="p-4 border-t">
+                                    {isAuthenticated && data ? (
+                                        <div className="space-y-2">
+                                            <NavLink
+                                                to="/profile"
+                                                className={({ isActive }) =>
+                                                    cn(
+                                                        "flex items-center gap-2 px-4 py-3 rounded-lg text-base font-medium transition-all duration-200",
+                                                        isActive
+                                                            ? "bg-primary/10 text-primary"
+                                                            : "hover:bg-muted hover:translate-x-1 hover:shadow-sm"
+                                                    )
+                                                }
+                                                onClick={() => setIsOpen(false)}
+                                            >
+                                                <User className="h-5 w-5" />
+                                                <span>Profile</span>
+                                            </NavLink>
+                                            <Button
+                                                variant="ghost"
+                                                className="w-full justify-start gap-2 text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+                                                onClick={handleLogout}
+                                            >
+                                                <LogOut className="h-5 w-5" />
+                                                <span>Log out</span>
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <NavLink to="/login" onClick={() => setIsOpen(false)}>
+                                                <Button variant="outline" className="w-full justify-center transition-all duration-200 hover:scale-[1.02] hover:shadow-md">
+                                                    Login
+                                                </Button>
+                                            </NavLink>
+                                            <NavLink to="/sign-up" onClick={() => setIsOpen(false)}>
+                                                <Button className="w-full justify-center transition-all duration-200 hover:scale-[1.02] hover:shadow-md">
+                                                    Sign Up
+                                                </Button>
+                                            </NavLink>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                            {isAuthenticated && data && (
-                                <Button
-                                    variant="ghost"
-                                    className="flex items-center justify-center gap-2 text-red-600 hover:text-red-700 w-full py-3 px-6 rounded-full text-lg mt-auto mb-2"
-                                    onClick={handleLogout}
-                                >
-                                    <LogOut className="h-5 w-5" />
-                                    <span>Log out</span>
-                                </Button>
-                            )}
                         </SheetContent>
                     </Sheet>
                 </div>

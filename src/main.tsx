@@ -13,6 +13,7 @@ import Signup from './pages/Signup'
 import { Provider } from 'react-redux'
 import { store } from './store'
 import Bookings from './pages/Bookings'
+import EventDetails from './pages/EventDetails'
 
 const queryClient = new QueryClient()
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/bookings",
         element: <Bookings />
+      },
+      {
+        path: "/event/:id",
+        element: <EventDetails />
       }
 
     ]
