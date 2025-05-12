@@ -1,11 +1,11 @@
-import { useParams } from "react-router";
+// import { useParams } from "react-router";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaMapMarkerAlt, FaTag, FaClock, FaUser, FaTicketAlt } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export default function EventDetails() {
-    const { id } = useParams();
+    // const { id } = useParams();
 
     // This would typically come from an API call using the id
     const event = {
