@@ -1,20 +1,22 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaMapMarkerAlt, FaTag } from "react-icons/fa";
+import { Link } from "react-router";
 
 export interface EventCardProps {
     image: string;
     category: string;
-    categoryColor: string;
+    categoryColor?: string;
     title: string;
     date: string;
     time: string;
     location: string;
     description: string;
-    tags: string[];
+    tags?: string[];
     price: string;
     onBook?: () => void;
     idx?: number;
+    id?: string;
 }
 
 const EventCard: React.FC<EventCardProps> = (props) => (
@@ -58,7 +60,7 @@ const EventCard: React.FC<EventCardProps> = (props) => (
                 {props.description}
             </p>
             <div className="flex flex-wrap gap-2 mb-4">
-                {props.tags.map((tag) => (
+                {props?.tags?.map((tag) => (
                     <span
                         key={tag}
                         className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-200 text-xs font-medium"
@@ -69,15 +71,17 @@ const EventCard: React.FC<EventCardProps> = (props) => (
             </div>
             <div className="flex items-end justify-between">
                 <span className="text-lg font-bold text-zinc-900 dark:text-white">{props.price}</span>
-                <motion.button
-                    whileHover={{ scale: 1.07 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-2 rounded-lg shadow transition-colors"
-                    onClick={props.onBook}
 
-                >
-                    Book Now
-                </motion.button>
+                <Link to={`/event/${props.id}`}>
+                    <motion.button
+                        whileHover={{ scale: 1.07 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-2 rounded-lg shadow transition-colors"
+
+                    >
+                        Book Now
+                    </motion.button>
+                </Link>
             </div>
         </div>
     </motion.div>

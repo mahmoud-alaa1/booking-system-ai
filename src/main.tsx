@@ -14,6 +14,15 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import Bookings from './pages/Bookings'
 import EventDetails from './pages/EventDetails'
+import Booked from './components/Booked'
+import Events from './pages/Events'
+import AdminLayout from './components/layout/AdminLayout'
+import Users from './pages/admin/Users'
+import Dashboard from './pages/admin/Dashboard'
+import Analytics from './pages/admin/Analytics'
+import { default as AdminBookings } from './pages/admin/Bookings'
+import { default as AdminEvents } from './pages/admin/Events'
+
 
 const queryClient = new QueryClient()
 const router = createBrowserRouter([
@@ -39,9 +48,44 @@ const router = createBrowserRouter([
         element: <Bookings />
       },
       {
+        path: "/events",
+        element: <Events />
+      },
+      {
         path: "/event/:id",
         element: <EventDetails />
-      }
+      },
+      {
+        path: "/booked",
+        element: <Booked />
+      },
+    ]
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />
+      },
+      {
+        path: "/admin/events",
+        element: <AdminEvents />
+      },
+      {
+        path: "/admin/bookings",
+        element: <AdminBookings />
+      },
+      {
+        path: "/admin/users",
+        element: <Users />
+      },
+      {
+        path: "/admin/analytics",
+        element: <Analytics />
+      },
+
 
     ]
   }
@@ -50,7 +94,48 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <ThemeProvider>
-      <Toaster position='top-center' />
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: 'var(--background)',
+            color: 'var(--foreground)',
+            borderRadius: 'var(--radius)',
+            padding: '16px',
+            border: '2px solid var(--border)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+            fontWeight: 'bold',
+          },
+          success: {
+            icon: '✓',
+            style: {
+              background: 'var(--background)',
+              color: 'var(--foreground)',
+              border: '1px solid var(--border)',
+              borderLeft: '4px solid var(--primary)',
+            },
+          },
+          error: {
+            icon: '×',
+            style: {
+              background: 'var(--background)',
+              color: 'var(--foreground)',
+              border: '1px solid var(--border)',
+              borderLeft: '4px solid var(--destructive)',
+            },
+          },
+          loading: {
+            icon: '⟳',
+            style: {
+              background: 'var(--background)',
+              color: 'var(--foreground)',
+              border: '1px solid var(--border)',
+              borderLeft: '4px solid var(--primary)',
+            },
+          },
+        }}
+      />
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>

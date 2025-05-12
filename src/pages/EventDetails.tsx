@@ -1,11 +1,15 @@
 // import { useParams } from "react-router";
 import { motion } from "framer-motion";
-import { FaCalendarAlt, FaMapMarkerAlt, FaTag, FaClock, FaUser, FaTicketAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaMapMarkerAlt, FaTag, FaClock, FaUser, FaTicketAlt, FaCheck } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function EventDetails() {
-    // const { id } = useParams();
+    const [isBookingOpen, setIsBookingOpen] = useState(false);
+    const navigate = useNavigate();
 
     // This would typically come from an API call using the id
     const event = {
@@ -29,6 +33,15 @@ export default function EventDetails() {
             "Event souvenir",
             "Complimentary water"
         ]
+    };
+
+    const handleBookNow = () => {
+        setIsBookingOpen(true);
+    };
+
+    const handleConfirmBooking = () => {
+        setIsBookingOpen(false);
+        navigate('/booked');
     };
 
     return (
@@ -137,7 +150,11 @@ export default function EventDetails() {
                             </div>
 
                             <div className="space-y-4">
-                                <Button className="w-full cursor-pointer" size="lg">
+                                <Button
+                                    className="w-full cursor-pointer"
+                                    size="lg"
+                                    onClick={handleBookNow}
+                                >
                                     <FaTicketAlt className="mr-2" />
                                     Book Now
                                 </Button>
@@ -149,6 +166,67 @@ export default function EventDetails() {
                     </div>
                 </div>
             </div>
+
+            {/* Booking Confirmation Dialog */}
+            <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-bold">Confirm Your Booking</DialogTitle>
+                        <DialogDescription className="text-base">
+                            Please review your booking details before proceeding.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="flex items-center gap-3">
+                            <FaCalendarAlt className="text-primary" />
+                            <div>
+                                <p className="text-sm text-muted-foreground">Date & Time</p>
+                                <p className="font-medium">{event.date} at {event.time}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <FaMapMarkerAlt className="text-primary" />
+                            <div>
+                                <p className="text-sm text-muted-foreground">Location</p>
+                                <p className="font-medium">{event.location}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <FaTicketAlt className="text-primary" />
+                            <div>
+                                <p className="text-sm text-muted-foreground">Price</p>
+                                <p className="font-medium">{event.price}</p>
+                            </div>
+                        </div>
+                        <div className="bg-muted/50 p-4 rounded-lg">
+                            <p className="text-sm text-muted-foreground mb-2">What's included:</p>
+                            <ul className="space-y-1">
+                                {event.included.map((item, index) => (
+                                    <li key={index} className="flex items-center gap-2 text-sm">
+                                        <FaCheck className="text-green-500 text-xs" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                    <DialogFooter className="flex-col sm:flex-row gap-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsBookingOpen(false)}
+                            className="w-full sm:w-auto"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleConfirmBooking}
+                            className="w-full sm:w-auto"
+                        >
+                            Confirm Booking
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </motion.div>
     );
 }
