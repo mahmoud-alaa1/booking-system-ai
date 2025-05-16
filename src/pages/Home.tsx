@@ -2,7 +2,6 @@ import NewsletterSection from "../components/home/NewsletterSection";
 import { motion } from "framer-motion";
 import HeroSection from "@/components/home/HeroSection";
 import CategorySectionV from "@/components/home/CategorySectionV";
-import EventCardList from "@/components/events/EventCardList";
 import UpcomingTickets from "@/components/events/UpcomingTickets";
 
 

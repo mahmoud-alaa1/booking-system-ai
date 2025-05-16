@@ -8,18 +8,6 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import type { Event } from "@/services/events";
 
-const categoryLabels: Record<number, string> = {
-    1: "Conference",
-    2: "Workshop",
-    3: "Seminar",
-    4: "Concert",
-    5: "Festival",
-    6: "Sports",
-    7: "Theater",
-    8: "Exhibition",
-    9: "Meetup",
-    10: "Webinar"
-};
 
 interface EventListProps {
     title?: string;

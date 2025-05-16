@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router";
-import { FaCalendarAlt, FaMapMarkerAlt, FaTag, FaClock, FaUser, FaTicketAlt, FaCheck, FaExclamationTriangle } from "react-icons/fa";
+import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaUser, FaTicketAlt, FaCheck, FaExclamationTriangle } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";

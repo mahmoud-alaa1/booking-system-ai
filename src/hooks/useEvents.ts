@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { eventsApi, type Event, type CreateEventDto, type UpdateEventDto, type EventsQueryParams } from '@/services/events';
+import { eventsApi, type EventsQueryParams } from '@/services/events';
 import { toast } from 'sonner';
 
 export function useEvents(params: EventsQueryParams = {}) {
