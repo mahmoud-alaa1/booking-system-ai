@@ -1,33 +1,33 @@
 import { useState } from "react";
-import { Link, useLocation, Outlet } from "react-router";
+import { Link, useLocation, Outlet, useNavigate } from "react-router";
 import {
-    FaHome,
     FaCalendarAlt,
-    FaUsers,
     FaTicketAlt,
-    FaChartBar,
-    FaCog,
     FaChevronLeft,
     FaChevronRight,
     FaSun,
-    FaMoon
+    FaMoon,
+    FaSignOutAlt
 } from "react-icons/fa";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 
 const menuItems = [
-    { icon: FaHome, label: "Dashboard", path: "/admin" },
     { icon: FaCalendarAlt, label: "Events", path: "/admin/events" },
-    { icon: FaUsers, label: "Users", path: "/admin/users" },
     { icon: FaTicketAlt, label: "Bookings", path: "/admin/bookings" },
-    { icon: FaChartBar, label: "Analytics", path: "/admin/analytics" },
-    { icon: FaCog, label: "Settings", path: "/admin/settings" },
 ];
 
 export default function AdminLayout() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const location = useLocation();
+    const navigate = useNavigate();
     const { theme, setTheme } = useTheme();
+
+    const handleLogout = () => {
+        // TODO: Add your logout logic here
+        // For example: clear tokens, cookies, etc.
+        navigate("/login");
+    };
 
     return (
         <div className="min-h-screen bg-background">
@@ -53,7 +53,7 @@ export default function AdminLayout() {
                 <div className="flex flex-col h-full">
                     {/* Logo */}
                     <div className="p-6 border-b">
-                        <h1 className="text-2xl font-bold text-primary">Admin Panel</h1>
+                        <h1 className="text-2xl font-bold text-primary">Booking System</h1>
                     </div>
 
                     {/* Navigation */}
@@ -77,7 +77,7 @@ export default function AdminLayout() {
                     </nav>
 
                     {/* User Section */}
-                    <div className="p-4 border-t">
+                    <div className="p-4 border-t space-y-4">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                                 <span className="text-primary font-semibold">A</span>
@@ -87,6 +87,14 @@ export default function AdminLayout() {
                                 <p className="text-sm text-muted-foreground">admin@example.com</p>
                             </div>
                         </div>
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-start gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                            onClick={handleLogout}
+                        >
+                            <FaSignOutAlt className="w-4 h-4" />
+                            Logout
+                        </Button>
                     </div>
                 </div>
 

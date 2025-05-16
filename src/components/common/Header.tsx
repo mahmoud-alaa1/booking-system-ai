@@ -12,7 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { LogOut, User, Menu } from "lucide-react"
+import { LogOut, Menu } from "lucide-react"
 import toast from "react-hot-toast"
 import { cn } from "@/lib/utils"
 import { useEffect, useState } from "react"
@@ -46,6 +46,7 @@ export function Header() {
 
     const navItems = [
         { label: "Home", to: "/" },
+        { label: "Events", to: "/events" },
         ...(isAuthenticated && data ? [{ label: "My Bookings", to: "/bookings" }] : [])
     ];
 
@@ -128,20 +129,6 @@ export function Header() {
                                         </div>
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem asChild>
-                                        <NavLink
-                                            to="/profile"
-                                            className={({ isActive }) =>
-                                                cn(
-                                                    "cursor-pointer flex items-center",
-                                                    isActive && "text-primary font-semibold"
-                                                )
-                                            }
-                                        >
-                                            <User className="mr-2 h-4 w-4" />
-                                            <span>Profile</span>
-                                        </NavLink>
-                                    </DropdownMenuItem>
                                     <DropdownMenuItem
                                         className="cursor-pointer text-red-600 focus:text-red-600"
                                         onClick={handleLogout}
@@ -188,10 +175,10 @@ export function Header() {
                                                     to={to}
                                                     className={({ isActive }) =>
                                                         cn(
-                                                            "flex items-center px-4 py-3 rounded-lg text-base font-medium transition-all duration-200",
+                                                            "block px-4 py-2 rounded-md transition-colors",
                                                             isActive
-                                                                ? "bg-primary/10 text-primary"
-                                                                : "hover:bg-muted hover:translate-x-1 hover:shadow-sm"
+                                                                ? "bg-primary text-primary-foreground"
+                                                                : "hover:bg-muted"
                                                         )
                                                     }
                                                     onClick={() => setIsOpen(false)}
@@ -205,40 +192,23 @@ export function Header() {
 
                                 <div className="p-4 border-t">
                                     {isAuthenticated && data ? (
-                                        <div className="space-y-2">
-                                            <NavLink
-                                                to="/profile"
-                                                className={({ isActive }) =>
-                                                    cn(
-                                                        "flex items-center gap-2 px-4 py-3 rounded-lg text-base font-medium transition-all duration-200",
-                                                        isActive
-                                                            ? "bg-primary/10 text-primary"
-                                                            : "hover:bg-muted hover:translate-x-1 hover:shadow-sm"
-                                                    )
-                                                }
-                                                onClick={() => setIsOpen(false)}
-                                            >
-                                                <User className="h-5 w-5" />
-                                                <span>Profile</span>
-                                            </NavLink>
-                                            <Button
-                                                variant="ghost"
-                                                className="w-full justify-start gap-2 text-destructive hover:text-destructive/90 hover:bg-destructive/10"
-                                                onClick={handleLogout}
-                                            >
-                                                <LogOut className="h-5 w-5" />
-                                                <span>Log out</span>
-                                            </Button>
-                                        </div>
+                                        <Button
+                                            variant="destructive"
+                                            className="w-full"
+                                            onClick={handleLogout}
+                                        >
+                                            <LogOut className="mr-2 h-4 w-4" />
+                                            Log out
+                                        </Button>
                                     ) : (
                                         <div className="space-y-2">
-                                            <NavLink to="/login" onClick={() => setIsOpen(false)}>
-                                                <Button variant="outline" className="w-full justify-center transition-all duration-200 hover:scale-[1.02] hover:shadow-md">
+                                            <NavLink to="/login" className="w-full" onClick={() => setIsOpen(false)}>
+                                                <Button variant="outline" className="w-full">
                                                     Login
                                                 </Button>
                                             </NavLink>
-                                            <NavLink to="/sign-up" onClick={() => setIsOpen(false)}>
-                                                <Button className="w-full justify-center transition-all duration-200 hover:scale-[1.02] hover:shadow-md">
+                                            <NavLink to="/sign-up" className="w-full" onClick={() => setIsOpen(false)}>
+                                                <Button className="w-full">
                                                     Sign Up
                                                 </Button>
                                             </NavLink>

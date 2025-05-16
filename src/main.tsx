@@ -16,13 +16,6 @@ import Bookings from './pages/Bookings'
 import EventDetails from './pages/EventDetails'
 import Booked from './components/Booked'
 import Events from './pages/Events'
-import AdminLayout from './components/layout/AdminLayout'
-import Users from './pages/admin/Users'
-import Dashboard from './pages/admin/Dashboard'
-import Analytics from './pages/admin/Analytics'
-import { default as AdminBookings } from './pages/admin/Bookings'
-import { default as AdminEvents } from './pages/admin/Events'
-
 
 const queryClient = new QueryClient()
 const router = createBrowserRouter([
@@ -38,8 +31,8 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />
-      }
-      , {
+      },
+      {
         path: "/sign-up",
         element: <Signup />
       },
@@ -58,35 +51,7 @@ const router = createBrowserRouter([
       {
         path: "/booked",
         element: <Booked />
-      },
-    ]
-  },
-  {
-    path: "/admin",
-    element: <AdminLayout />,
-    children: [
-      {
-        index: true,
-        element: <Dashboard />
-      },
-      {
-        path: "/admin/events",
-        element: <AdminEvents />
-      },
-      {
-        path: "/admin/bookings",
-        element: <AdminBookings />
-      },
-      {
-        path: "/admin/users",
-        element: <Users />
-      },
-      {
-        path: "/admin/analytics",
-        element: <Analytics />
-      },
-
-
+      }
     ]
   }
 ])

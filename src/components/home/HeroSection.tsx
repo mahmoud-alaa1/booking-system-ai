@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import { Button } from "../ui/button"
 import ImageSlider from "./ImageSlider"
+import { Link } from "react-router";
 
 
 const FloatingLabel = ({ text, delay, x, y }: { text: string; delay: number; x: number; y: number }) => (
@@ -108,21 +109,12 @@ const HeroSection = () => {
                                 transition={{ duration: 0.5, delay: 0.5 }}
                                 className="flex gap-4 pt-4"
                             >
-                                <Button className="h-12 px-8 relative group overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                    <span className="relative">Get Started</span>
-                                </Button>
-                                <Button variant="outline" className="h-12 px-8 group">
-                                    <span className="relative flex items-center gap-2">
-                                        Learn More
-                                        <motion.span
-                                            animate={{ x: [0, 5, 0] }}
-                                            transition={{ duration: 1.5, repeat: Infinity }}
-                                        >
-                                            →
-                                        </motion.span>
-                                    </span>
-                                </Button>
+                                <Link to="/events">
+                                    <Button className="h-12 px-8 relative group overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        <span className="relative">Get Started</span>
+                                    </Button>
+                                </Link>
                             </motion.div>
 
 

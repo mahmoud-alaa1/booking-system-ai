@@ -1,82 +1,159 @@
-// import { useParams } from "react-router";
-import { motion } from "framer-motion";
-import { FaCalendarAlt, FaMapMarkerAlt, FaTag, FaClock, FaUser, FaTicketAlt, FaCheck } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router";
+import { FaCalendarAlt, FaMapMarkerAlt, FaTag, FaClock, FaUser, FaTicketAlt, FaCheck, FaExclamationTriangle } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import type { Event } from "@/services/events";
+import { EventStatus } from "@/services/events";
+import clsx from "clsx";
+import { bookingsApi } from "@/services/bookings";
+import { toast } from "sonner";
+
+const categoryLabels: Record<number, string> = {
+    1: "Conference",
+    2: "Workshop",
+    3: "Seminar",
+    4: "Concert",
+    5: "Festival",
+    6: "Sports",
+    7: "Theater",
+    8: "Exhibition",
+    9: "Meetup",
+    10: "Webinar"
+};
 
 export default function EventDetails() {
     const [isBookingOpen, setIsBookingOpen] = useState(false);
+    const [isBooking, setIsBooking] = useState(false);
+    const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const event = location.state?.event as Event;
 
-    // This would typically come from an API call using the id
-    const event = {
-        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800",
-        category: "Food",
-        categoryColor: "bg-yellow-500",
-        title: "Food & Wine Festival",
-        date: "Aug 15, 2025",
-        time: "3:00 PM",
-        location: "Riverfront Park",
-        description: "Savor exquisite flavors at our annual Food & Wine Festival. Meet celebrity chefs, attend cooking demonstrations, and taste dishes from the finest restaurants in the city. This year's festival promises to be bigger and better than ever, featuring exclusive wine tastings, live entertainment, and culinary workshops.",
-        tags: ["food", "wine", "festival"],
-        price: "$65.00",
-        organizer: "City Events Committee",
-        duration: "4 hours",
-        capacity: "500 attendees",
-        included: [
-            "Access to all food stations",
-            "Wine tasting sessions",
-            "Cooking demonstration entry",
-            "Event souvenir",
-            "Complimentary water"
-        ]
-    };
+    if (!event) {
+        return (
+            <div className="min-h-screen w-screen pt-[72px] flex items-center justify-center">
+                <div className="text-center">
+                    <h1 className="text-2xl font-bold mb-4">Event Not Found</h1>
+                    <Button onClick={() => navigate('/events')}>Back to Events</Button>
+                </div>
+            </div>
+        );
+    }
 
     const handleBookNow = () => {
         setIsBookingOpen(true);
     };
 
-    const handleConfirmBooking = () => {
-        setIsBookingOpen(false);
-        navigate('/booked');
+    const handleConfirmBooking = async () => {
+        try {
+            setIsBooking(true);
+            await bookingsApi.create(event.id);
+            toast.success('Event booked successfully!');
+            setIsBookingOpen(false);
+            navigate('/booked');
+        } catch (error: any) {
+            console.error('Error booking event:', error);
+            if (error.response?.status === 401) {
+                toast.error('Please log in to book this event');
+                navigate('/login');
+            } else {
+                toast.error(error.response?.data?.message || 'Failed to book event. Please try again.');
+            }
+        } finally {
+            setIsBooking(false);
+        }
     };
 
+    const getBookingButtonState = () => {
+        const now = new Date();
+        const eventDate = new Date(event.startDate);
+
+        if (event.isBooked) {
+            return {
+                text: 'Already Booked ✓',
+                disabled: true,
+                className: 'bg-green-500 hover:bg-green-600 text-white',
+                message: 'You have already booked this event.'
+            };
+        }
+
+        if (eventDate < now) {
+            return {
+                text: 'Event Passed',
+                disabled: true,
+                className: 'bg-gray-500 hover:bg-gray-600 text-white',
+                message: 'This event has already passed and cannot be booked.'
+            };
+        }
+
+        if (event.eventStatus === EventStatus.Started || event.eventStatus === EventStatus.Completed) {
+            return {
+                text: 'Event Started',
+                disabled: true,
+                className: 'bg-gray-500 hover:bg-gray-600 text-white',
+                message: 'This event has already started and cannot be booked.'
+            };
+        }
+
+        if (event.eventStatus === EventStatus.Cancelled) {
+            return {
+                text: 'Event Cancelled',
+                disabled: true,
+                className: 'bg-red-500 hover:bg-red-600 text-white',
+                message: 'This event has been cancelled.'
+            };
+        }
+
+        return {
+            text: 'Book Now',
+            disabled: false,
+            className: 'bg-primary hover:bg-primary/90 text-white',
+            message: 'Secure your spot now! Limited tickets available.'
+        };
+    };
+
+    const bookingState = getBookingButtonState();
+
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="min-h-screen w-screen pt-[72px]"
-        >
+        <div className="min-h-screen w-screen pt-[72px]">
             {/* Hero Section */}
             <div className="relative h-[60vh] w-full">
-                <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-full object-cover"
-                />
+                {!imageError ? (
+                    <img
+                        src={`https://ayadtytest.runasp.net/api/upload/${event.imageUrl}`}
+                        alt={event.eventName}
+                        className="w-full h-full object-cover"
+                        onError={() => setImageError(true)}
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-muted">
+                        <div className="text-center">
+                            <FaExclamationTriangle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                            <span className="text-muted-foreground text-lg">Image not available</span>
+                        </div>
+                    </div>
+                )}
                 <div className="absolute inset-0 bg-black/50" />
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center text-white">
-                        <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4 ${event.categoryColor}`}>
-                            {event.category}
+                        <span className="inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4 bg-blue-500">
+                            {categoryLabels[event.category] || 'Other'}
                         </span>
-                        <h1 className="text-4xl md:text-6xl font-bold mb-4">{event.title}</h1>
+                        <h1 className="text-4xl md:text-6xl font-bold mb-4">{event.eventName}</h1>
                         <div className="flex items-center justify-center gap-4 text-lg">
                             <span className="flex items-center">
                                 <FaCalendarAlt className="mr-2" />
-                                {event.date}
+                                {new Date(event.startDate).toLocaleDateString()}
                             </span>
                             <span className="flex items-center">
                                 <FaClock className="mr-2" />
-                                {event.time}
+                                {new Date(event.startDate).toLocaleTimeString()}
                             </span>
                             <span className="flex items-center">
                                 <FaMapMarkerAlt className="mr-2" />
-                                {event.location}
+                                {event.venue}
                             </span>
                         </div>
                     </div>
@@ -92,17 +169,6 @@ export default function EventDetails() {
                             <h2 className="text-2xl font-bold mb-4">About This Event</h2>
                             <p className="text-gray-600 dark:text-gray-300 mb-6">{event.description}</p>
 
-                            <div className="flex flex-wrap gap-2 mb-6">
-                                {event.tags.map((tag) => (
-                                    <span
-                                        key={tag}
-                                        className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-200 text-sm font-medium"
-                                    >
-                                        <FaTag className="mr-2" /> {tag}
-                                    </span>
-                                ))}
-                            </div>
-
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                 <div className="flex items-center gap-3">
                                     <FaUser className="text-gray-500" />
@@ -115,28 +181,27 @@ export default function EventDetails() {
                                     <FaClock className="text-gray-500" />
                                     <div>
                                         <p className="text-sm text-gray-500">Duration</p>
-                                        <p className="font-medium">{event.duration}</p>
+                                        <p className="font-medium">
+                                            {new Date(event.endDate).getTime() - new Date(event.startDate).getTime() > 0
+                                                ? `${Math.round((new Date(event.endDate).getTime() - new Date(event.startDate).getTime()) / (1000 * 60 * 60))} hours`
+                                                : 'TBD'}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <FaUser className="text-gray-500" />
                                     <div>
                                         <p className="text-sm text-gray-500">Capacity</p>
-                                        <p className="font-medium">{event.capacity}</p>
+                                        <p className="font-medium">{event.capacity} attendees</p>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div>
-                                <h3 className="text-xl font-semibold mb-3">What's Included</h3>
-                                <ul className="space-y-2">
-                                    {event.included.map((item, index) => (
-                                        <li key={index} className="flex items-center gap-2">
-                                            <span className="text-green-500">✓</span>
-                                            <span>{item}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+                                <div className="flex items-center gap-3">
+                                    <FaTicketAlt className="text-gray-500" />
+                                    <div>
+                                        <p className="text-sm text-gray-500">Tickets Booked</p>
+                                        <p className="font-medium">{event.ticketsBooked} / {event.capacity}</p>
+                                    </div>
+                                </div>
                             </div>
                         </Card>
                     </div>
@@ -144,23 +209,34 @@ export default function EventDetails() {
                     {/* Booking Card */}
                     <div className="lg:col-span-1">
                         <Card className="p-6 sticky top-24">
-                            <div className="text-center mb-6">
-                                <h3 className="text-2xl font-bold mb-2">Book Your Spot</h3>
-                                <p className="text-3xl font-bold text-primary">{event.price}</p>
-                            </div>
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="text-2xl font-bold mb-2">${event.price.toFixed(2)}</h3>
+                                    <p className="text-sm text-muted-foreground">{bookingState.message}</p>
+                                </div>
 
-                            <div className="space-y-4">
                                 <Button
-                                    className="w-full cursor-pointer"
-                                    size="lg"
+                                    className={clsx("w-full", bookingState.className)}
+                                    disabled={bookingState.disabled}
                                     onClick={handleBookNow}
                                 >
-                                    <FaTicketAlt className="mr-2" />
-                                    Book Now
+                                    {bookingState.text}
                                 </Button>
-                                <p className="text-sm text-center text-gray-500">
-                                    Secure your spot now! Limited tickets available.
-                                </p>
+
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <FaCheck className="text-green-500" />
+                                        <span>Secure booking</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <FaCheck className="text-green-500" />
+                                        <span>Instant confirmation</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <FaCheck className="text-green-500" />
+                                        <span>Free cancellation</span>
+                                    </div>
+                                </div>
                             </div>
                         </Card>
                     </div>
@@ -169,64 +245,27 @@ export default function EventDetails() {
 
             {/* Booking Confirmation Dialog */}
             <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent>
                     <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold">Confirm Your Booking</DialogTitle>
-                        <DialogDescription className="text-base">
-                            Please review your booking details before proceeding.
+                        <DialogTitle>Confirm Booking</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to book this event? This will reserve your spot and you'll receive a confirmation email.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="space-y-4 py-4">
-                        <div className="flex items-center gap-3">
-                            <FaCalendarAlt className="text-primary" />
-                            <div>
-                                <p className="text-sm text-muted-foreground">Date & Time</p>
-                                <p className="font-medium">{event.date} at {event.time}</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <FaMapMarkerAlt className="text-primary" />
-                            <div>
-                                <p className="text-sm text-muted-foreground">Location</p>
-                                <p className="font-medium">{event.location}</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <FaTicketAlt className="text-primary" />
-                            <div>
-                                <p className="text-sm text-muted-foreground">Price</p>
-                                <p className="font-medium">{event.price}</p>
-                            </div>
-                        </div>
-                        <div className="bg-muted/50 p-4 rounded-lg">
-                            <p className="text-sm text-muted-foreground mb-2">What's included:</p>
-                            <ul className="space-y-1">
-                                {event.included.map((item, index) => (
-                                    <li key={index} className="flex items-center gap-2 text-sm">
-                                        <FaCheck className="text-green-500 text-xs" />
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                    <DialogFooter className="flex-col sm:flex-row gap-2">
-                        <Button
-                            variant="outline"
-                            onClick={() => setIsBookingOpen(false)}
-                            className="w-full sm:w-auto"
-                        >
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsBookingOpen(false)}>
                             Cancel
                         </Button>
                         <Button
                             onClick={handleConfirmBooking}
-                            className="w-full sm:w-auto"
+                            disabled={isBooking}
+                            className="bg-primary hover:bg-primary/90"
                         >
-                            Confirm Booking
+                            {isBooking ? 'Booking...' : 'Confirm Booking'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </motion.div>
+        </div>
     );
 }
