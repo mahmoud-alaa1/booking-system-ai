@@ -17,5 +17,5 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     }
   }, [dispatch]);
 
-  return <>{children}</>;
+  return <div className=" ">{children}</div>;
 }

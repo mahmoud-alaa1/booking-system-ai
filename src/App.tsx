@@ -16,6 +16,8 @@ import Booked from "./components/Booked";
 import Events from "./pages/Events";
 
 import Providers from "./providers/Providers";
+import AdminPage from "./pages/AdminPage";
+import AdminEventForm from "./pages/AdminEventForm";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -51,6 +53,18 @@ const router = createBrowserRouter([
       {
         path: "/booked",
         element: <Booked />,
+      },
+      {
+        path: "/admin",
+        element: <AdminPage />,
+      },
+      {
+        path: "/admin/event/new",
+        element: <AdminEventForm />,
+      },
+      {
+        path: "/admin/event/:id",
+        element: <AdminEventForm />,
       },
     ],
   },

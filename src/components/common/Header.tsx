@@ -46,6 +46,7 @@ export function Header() {
     ...(isAuthenticated && data
       ? [{ label: "My Bookings", to: "/bookings" }]
       : []),
+    ...(isAdmin && data ? [{ label: "Admin", to: "/admin" }] : []),
   ];
 
   const NavLinks = () => (
