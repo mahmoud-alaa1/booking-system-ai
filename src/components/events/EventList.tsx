@@ -25,7 +25,7 @@ export default function EventList({
   const { theme } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+  const [imageErrors] = useState<Record<string, boolean>>({});
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const category = searchParams.get("category") || undefined;
@@ -45,10 +45,6 @@ export default function EventList({
       prev.set("page", page.toString());
       return prev;
     });
-  };
-
-  const handleImageError = (eventId: string) => {
-    setImageErrors((prev) => ({ ...prev, [eventId]: true }));
   };
 
   const handleEventClick = (event: Event) => {

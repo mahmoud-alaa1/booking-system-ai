@@ -27,7 +27,7 @@ const categoryLabels: Record<number, string> = {
 export default function EventDetails() {
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [isBooking, setIsBooking] = useState(false);
-    const [imageError, setImageError] = useState(false);
+    const [imageError] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const event = location.state?.event as Event;
