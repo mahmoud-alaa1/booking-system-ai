@@ -39,7 +39,7 @@ export interface Event {
 export interface CreateEventDto {
   eventName: string;
   description: string;
-  Category: ECategory;
+  category: ECategory;
   startDate: string;
   endDate: string;
   venue: string;

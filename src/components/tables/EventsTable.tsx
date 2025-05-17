@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEventsOld } from "@/hooks/useEvents";
 import { useState } from "react";
-import type { Event } from "@/services/events";
+import { ECategory, type Event } from "@/services/events";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,8 +31,6 @@ export default function EventsTable() {
   const { events, isLoading, error, totalPages, deleteEvent } = useEventsOld({
     pageNumber,
     pageSize,
-    category: "Conference",
-    status: "Pending",
   });
 
   if (isLoading) return <p className="p-4">Loading...</p>;
@@ -55,7 +53,6 @@ export default function EventsTable() {
             <TableHead>Organizer</TableHead>
             <TableHead>Capacity</TableHead>
             <TableHead>Tickets Booked</TableHead>
-            <TableHead>Image</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -67,7 +64,7 @@ export default function EventsTable() {
               <TableCell>
                 <TextTruncate text={event.description}></TextTruncate>
               </TableCell>
-              <TableCell>{event.category}</TableCell>
+              <TableCell>{ECategory[event.category]}</TableCell>
               <TableCell>
                 {new Date(event.startDate).toLocaleDateString()}
               </TableCell>
@@ -79,13 +76,7 @@ export default function EventsTable() {
               <TableCell>{event.organizer}</TableCell>
               <TableCell>{event.capacity}</TableCell>
               <TableCell>{event.ticketsBooked}</TableCell>
-              <TableCell>
-                <img
-                  src={event.imageUrl}
-                  alt={event.eventName}
-                  className="h-12 w-12 object-cover rounded-md"
-                />
-              </TableCell>
+
               <TableCell>{event.eventStatus}</TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>
