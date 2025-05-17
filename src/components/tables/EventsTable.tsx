@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEventsOld } from "@/hooks/useEvents";
 import { useState } from "react";
-import { ECategory, type Event } from "@/services/events";
+import { ECategory, EventStatus, type Event } from "@/services/events";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -77,7 +77,7 @@ export default function EventsTable() {
               <TableCell>{event.capacity}</TableCell>
               <TableCell>{event.ticketsBooked}</TableCell>
 
-              <TableCell>{event.eventStatus}</TableCell>
+              <TableCell>{EventStatus[event.eventStatus]}</TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="z-50">
