@@ -18,6 +18,8 @@ function Events() {
     const [searchParams] = useSearchParams();
     const category = searchParams.get("category");
 
+
+
     return (
         <div className="container mx-auto px-4 py-8 my-20">
             <div className="mb-8">
@@ -30,7 +32,7 @@ function Events() {
             </div>
 
             <EventList
-                pageSize={6}
+                pageSize={12}
                 showPagination={true}
             />
         </div>

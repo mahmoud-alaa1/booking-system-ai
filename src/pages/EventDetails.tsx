@@ -9,6 +9,7 @@ import { EventStatus } from "@/services/events";
 import clsx from "clsx";
 import { bookingsApi } from "@/services/bookings";
 import { toast } from "sonner";
+import SecureImage from "@/services/fileSevices";
 
 const categoryLabels: Record<number, string> = {
     1: "Conference",
@@ -121,12 +122,8 @@ export default function EventDetails() {
             {/* Hero Section */}
             <div className="relative h-[60vh] w-full">
                 {!imageError ? (
-                    <img
-                        src={`https://ayadtytest.runasp.net/api/upload/${event.imageUrl}`}
-                        alt={event.eventName}
-                        className="w-full h-full object-cover"
-                        onError={() => setImageError(true)}
-                    />
+                    
+                    <SecureImage fileName={event.imageUrl}/>
                 ) : (
                     <div className="w-full h-full flex items-center justify-center bg-muted">
                         <div className="text-center">
