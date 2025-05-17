@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Form,
   FormField,
@@ -22,12 +22,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
-import {
-  eventsApi,
-  ECategory,
-  type UpdateEventDto,
-  type CreateEventDto,
-} from "@/services/events";
+import { eventsApi, ECategory } from "@/services/events";
 import { enumToOptions } from "@/lib/utils";
 import axiosInstance from "@/lib/axios";
 
